@@ -5,8 +5,9 @@ import { Formik } from "formik"
 import { Colors } from "../styles/Colors"
 import axios from "axios"
 import { saveItemInStorage } from "../helpers/storage"
+import Constants from "expo-constants"
 
-import { Octicons, Ionicons, Fontisto } from "@expo/vector-icons"
+import { Octicons, Ionicons } from "@expo/vector-icons"
 import {
   SignupContainer,
   Container,
@@ -27,21 +28,20 @@ import {
   TextLinkContent,
 } from "../styles/auth"
 
-const { brand, darkLight, primary } = Colors
+const { brand, darkLight } = Colors
 
 import { View } from "react-native"
 import KeyboardAvoidingWrapper from "../components/KeyboardAvoidingWrapper"
 import { UserContext } from "../store/user"
 
-const SignupPage = ({ navigation }) => {
+const SignupPage = ({ navigation, authApiBaseUrl }) => {
   const [hidePassword, setHidePassword] = useState(true)
   const [error, setError] = useState("***")
   const { setUser } = useContext(UserContext)
 
   const signup = async (values) => {
     setError("")
-    const url =
-      "https://gratispay-auth-microservice.herokuapp.com/auth/register"
+    const url = `${authApiBaseUrl}auth/register`
     values.image = ""
     try {
       const { data } = await axios.post(url, values)
@@ -163,5 +163,9 @@ const MyTextInput = ({
       )}
     </View>
   )
+}
+
+SignupPage.defaultProps = {
+  authApiBaseUrl: Constants.manifest.extra.authApiBaseUrl,
 }
 export default SignupPage
