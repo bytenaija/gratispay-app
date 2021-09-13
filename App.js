@@ -1,21 +1,32 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from "react"
+import AppLoading from "expo-app-loading"
 
+import RootStack from "./navigators/RootStack"
+import UserContextProvider from "./store/user"
+import { getItemFromStorage } from "./helpers/storage"
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+  const [appIsReady, setAppIsReady] = useState(false)
+  const [storedCredentials, setStoredCredentials] = useState(null)
+  const checkIsUserExists = async () => {
+    const userCred = await getItemFromStorage("user")
+    setStoredCredentials(userCred)
+  }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  if (!appIsReady) {
+    return (
+      <AppLoading
+        startAsync={checkIsUserExists}
+        onFinish={() => setAppIsReady(true)}
+        onError={(e) => console.log(e)}
+      />
+    )
+  }
+  return (
+    <UserContextProvider
+      setUser={setStoredCredentials}
+      user={storedCredentials}
+    >
+      <RootStack />
+    </UserContextProvider>
+  )
+}
