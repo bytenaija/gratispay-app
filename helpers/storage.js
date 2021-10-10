@@ -17,3 +17,7 @@ export async function getItemFromStorage(key) {
     return null
   }
 }
+
+export async function deleteItemFromStorage(key) {
+  return await AsyncStorage.removeItem(key)
+}

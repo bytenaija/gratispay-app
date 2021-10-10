@@ -6,4 +6,7 @@ export const Colors = {
   brand: "#6d28d9",
   green: "#10b981",
   red: "#ef4444",
+  main: "#448AFF",
 }
+
+export default Colors

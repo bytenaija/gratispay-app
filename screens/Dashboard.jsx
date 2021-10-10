@@ -1,46 +1,72 @@
-import { StatusBar } from "expo-status-bar"
-import React, { useState, useContext } from "react"
-import Logo from "../components/Logo"
-import { Formik } from "formik"
-import { Colors } from "../styles/Colors"
-import axios from "axios"
-import Constants from "expo-constants"
-import * as Google from "expo-google-app-auth"
+import { StyleSheet, Text, View, ScrollView } from "react-native"
+import React, { useEffect } from "react"
+import { WalletContext } from "../store/wallet"
 
-import { Octicons, Ionicons, Fontisto } from "@expo/vector-icons"
-import {
-  Container,
-  InnerContainer,
-  Subtitle,
-  StyledFormArea,
-  StyledTextInput,
-  StyledInputLabel,
-  LeftIcon,
-  RightIcon,
-  StyledButton,
-  ButtonText,
-  MessageBox,
-  Line,
-  ExtraView,
-  ExtraText,
-  TextLink,
-  TextLinkContent,
-} from "../styles/auth"
-const { brand, darkLight, primary } = Colors
 
-import { View } from "react-native"
-import KeyboardAvoidingWrapper from "../components/KeyboardAvoidingWrapper"
+import MainLayout from "../layouts/main-layout"
+import { useContext } from "react"
+import { UserContext } from "../store/user"
 
-const DashboardPage = ({ navigation, authApiBaseUrl }) => {
+import WalletDisplay from "../components/WalletDisplay"
+
+import ActionsButton from "../components/ActionsButton"
+import { getUserWallets } from "../functions/wallets"
+import GiveAwayWidget from "../components/GiveawayWidget"
+import { getUserGiveAway, setAccepting,setClosed } from "../functions/giveaway"
+import { GiveawayContext } from "../store/giveaway"
+
+const Dashboard = ({ navigation }) => {
+  const { wallet, setWallet } = useContext(WalletContext)
+  const { giveaways, setGiveaway } = useContext(GiveawayContext)
+  const { user } = useContext(UserContext)
+
+  useEffect(() => {
+    if (!wallet && user) {
+      getUserWallets(user.access_token, setWallet)
+    }
+
+    getUserGiveAway(user.access_token, setGiveaway)
+  }, [user, wallet])
+
+  const handleAccepting = async (id) => {
+    setAccepting(user.access_token, id, setGiveaway)
+  }
+
+   const handleClose = async (id) => {
+    setClosed(user.access_token, id, setGiveaway)
+  }
   return (
-    <KeyboardAvoidingWrapper>
-      <Container>
-        <TextLink>
-          <TextLinkContent>Welcome to Curvoisier</TextLinkContent>
-        </TextLink>
-      </Container>
-    </KeyboardAvoidingWrapper>
+    <MainLayout navigation={navigation}>
+      <ScrollView style={{ flex: 1, padding: 20 }}>
+        <View >
+          <Text
+            style={{
+              color: "#000000",
+              fontSize: 20,
+              fontWeight: "bold",
+              marginBottom: 20,
+            }}
+          >
+            Welcome {user?.firstName}
+          </Text>
+        </View>
+        <View >
+          <WalletDisplay />
+        </View>
+        <View >
+          <ActionsButton navigation={navigation}/>
+        </View>
+
+          <View >
+          <GiveAwayWidget navigation={navigation} giveAway={giveaways} handleAccepting={handleAccepting} handleClose={handleClose}/>
+        </View>
+      </ScrollView>
+    </MainLayout>
   )
 }
 
-export default DashboardPage
+export default Dashboard
+
+const styles = StyleSheet.create({
+  walletBalance: {},
+})

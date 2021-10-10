@@ -38,14 +38,15 @@ export const PageTitle = styled(Text)`
   color: ${brand};
 `
 
-export const Subtitle = styled(Text)`
+export const Subtitle = styled(Text).attrs((props) => ({ ...props }))`
   margin-top: 20px;
+  text-align: ${(props) => (props.textAlign ? props.textAlign : "center")};
 
   font-size: 18px;
   margin-bottom: 20px;
   letter-spacing: 1px;
   font-weight: bold;
-  color: ${brand};
+  color: ${(props) => (props.color ? props.color : brand)};
 `
 
 export const StyledFormArea = styled.View`

@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar"
-import React, { useState, useContext } from "react"
+import React, { useState, useContext, useEffect } from "react"
 import Logo from "../components/Logo"
 import { Formik } from "formik"
 import { Colors } from "../styles/Colors"
@@ -37,8 +37,11 @@ import { UserContext } from "../store/user"
 const SignupPage = ({ navigation, authApiBaseUrl }) => {
   const [hidePassword, setHidePassword] = useState(true)
   const [error, setError] = useState("***")
-  const { setUser } = useContext(UserContext)
+  const { user, setUser } = useContext(UserContext)
 
+  useEffect(() => {
+    if (user) navigation.navigate("EnterPinScreen")
+  }, [user])
   const signup = async (values) => {
     setError("")
     const url = `${authApiBaseUrl}auth/register`

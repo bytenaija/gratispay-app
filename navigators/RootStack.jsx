@@ -3,17 +3,19 @@ import { NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import LoginPage from "../screens/LoginPage"
 import SignupPage from "../screens/SignupPage"
-import DashboardPage from "../screens/Dashboard"
 import { Colors } from "../styles/Colors"
 import { UserContext } from "../store/user"
 import { useContext } from "react/cjs/react.development"
+
+import SetPinPage from "../screens/SetPinPage"
+import EnterPinPage from "../screens/EnterPinPage"
+import ButtomTab from "./BottomTab"
 
 const Stack = createNativeStackNavigator()
 
 const RootStack = () => {
   const { user } = useContext(UserContext)
 
-  console.log(user, "user")
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -35,26 +37,35 @@ const RootStack = () => {
             paddingLeft: 20,
           },
         }}
-        initialRouteName="Login"
+        initialRouteName="EnterPinScreen"
       >
-        {!user && (
-          <>
-            <Stack.Screen
-              name="Login"
-              component={LoginPage}
-              options={{ headerShadowVisible: false }}
-            />
-            <Stack.Screen
-              name="Signup"
-              component={SignupPage}
-              options={{ headerShadowVisible: false }}
-            />
-          </>
-        )}
+        <Stack.Screen
+          name="Login"
+          component={LoginPage}
+          options={{ headerShadowVisible: false }}
+        />
+        <Stack.Screen
+          name="Signup"
+          component={SignupPage}
+          options={{ headerShadowVisible: false }}
+        />
+
+        <Stack.Screen
+          name="SetPinScreen"
+          component={SetPinPage}
+          options={{ headerShadowVisible: false, headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="EnterPinScreen"
+          component={EnterPinPage}
+          options={{ headerShadowVisible: false, headerShown: false }}
+        />
+
         <Stack.Screen
           name="Dashboard"
-          component={DashboardPage}
-          options={{ headerShadowVisible: false }}
+          component={ButtomTab}
+          options={{ headerShadowVisible: false, headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

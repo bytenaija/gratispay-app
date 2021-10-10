@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar"
-import React, { useState, useContext } from "react"
+import React, { useState, useContext, useEffect } from "react"
 import Logo from "../components/Logo"
 import { Formik } from "formik"
 import { Colors } from "../styles/Colors"
@@ -13,10 +13,6 @@ import {
   InnerContainer,
   Subtitle,
   StyledFormArea,
-  StyledTextInput,
-  StyledInputLabel,
-  LeftIcon,
-  RightIcon,
   StyledButton,
   ButtonText,
   MessageBox,
@@ -27,18 +23,32 @@ import {
   TextLinkContent,
 } from "../styles/auth"
 
-const { brand, darkLight, primary } = Colors
+const { darkLight, primary } = Colors
 
 import { View } from "react-native"
 import KeyboardAvoidingWrapper from "../components/KeyboardAvoidingWrapper"
 import { UserContext } from "../store/user"
-import { saveItemInStorage } from "../helpers/storage"
+import { getItemFromStorage, saveItemInStorage } from "../helpers/storage"
+import { TextInput } from "../components/TextInput"
 
 const LoginPage = ({ navigation, authApiBaseUrl }) => {
   const [hidePassword, setHidePassword] = useState(true)
   const [error, setError] = useState("***")
-  const { setUser } = useContext(UserContext)
-  console.log(authApiBaseUrl, "auth")
+  const { user, setUser } = useContext(UserContext)
+  useEffect(() => {
+    const checkUserSetPin = async () => {
+      const pinSet = await getItemFromStorage("pinSet")
+      if (user) {
+        if (pinSet) {
+          navigation.navigate("EnterPinScreen")
+        } else {
+          navigation.navigate("SetPinScreen")
+        }
+      }
+    }
+
+    checkUserSetPin()
+  }, [user])
   const login = async (values) => {
     setError("")
     const url = `${authApiBaseUrl}auth/login`
@@ -94,7 +104,7 @@ const LoginPage = ({ navigation, authApiBaseUrl }) => {
           >
             {({ handleChange, handleBlur, handleSubmit, values }) => (
               <StyledFormArea>
-                <MyTextInput
+                <TextInput
                   label="Email Address"
                   icon="mail"
                   placeholder="everistus@mail.com"
@@ -105,7 +115,7 @@ const LoginPage = ({ navigation, authApiBaseUrl }) => {
                   value={values.username}
                 />
 
-                <MyTextInput
+                <TextInput
                   label="Password"
                   icon="lock"
                   placeholder="* * * * * * * * *"
@@ -146,34 +156,6 @@ const LoginPage = ({ navigation, authApiBaseUrl }) => {
         </InnerContainer>
       </Container>
     </KeyboardAvoidingWrapper>
-  )
-}
-
-const MyTextInput = ({
-  label,
-  icon,
-  hidePassword,
-  setHidePassword,
-  isPassword,
-  ...props
-}) => {
-  return (
-    <View>
-      <LeftIcon>
-        <Octicons name={icon} size={30} color={brand} />
-      </LeftIcon>
-      <StyledInputLabel>{label}</StyledInputLabel>
-      <StyledTextInput {...props} />
-      {isPassword && (
-        <RightIcon onPress={() => setHidePassword(!hidePassword)}>
-          <Ionicons
-            name={hidePassword ? "md-eye-off" : "md-eye"}
-            size={30}
-            color={darkLight}
-          />
-        </RightIcon>
-      )}
-    </View>
   )
 }
 
