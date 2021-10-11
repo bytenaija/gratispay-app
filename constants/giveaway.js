@@ -10,3 +10,7 @@ export const BENEFICIARIESGIVEAWAYSTATUS ={
   ERROR: 2,
   CANCELLED: 3,
 }
+
+export const sortDate = (a, b) => {
+   return new Date(b.createdAt) > new Date(a.createdAt)
+}

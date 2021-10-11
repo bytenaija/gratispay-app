@@ -2,13 +2,11 @@ import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons';
 import numbro from "numbro"
-import  Constants  from 'expo-constants';
 
-import { STATUS } from '../constants/giveaway';
-import { borderColor } from 'styled-system';
+import { STATUS, sortDate } from '../constants/giveaway';
 
 const GiveAwayWidget = ({ navigation, giveAway = [], handleClose, handleAccepting }) => {
-  const currentGiveAway = giveAway.slice(0, 2);
+  const currentGiveAway = giveAway.sort(sortDate).slice(0, 2);
   return (
     <View style={styles.container}>
       <View style={styles.header}>

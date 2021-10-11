@@ -2,15 +2,10 @@ import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import moment from 'moment'
 import numbro from "numbro"
-import  Constants  from 'expo-constants';
-
-import { BENEFICIARIESGIVEAWAYSTATUS } from '../constants/giveaway';
 
 
-const sortDate = (a, b) => {
+import { BENEFICIARIESGIVEAWAYSTATUS, sortDate } from '../constants/giveaway';
 
-   return new Date(b.createdAt) > new Date(a.createdAt)
-}
 
 const BeneficiaryWidget = ({ navigation, giveAway = []}) => {
   const currentGiveAway = giveAway.sort(sortDate).slice(0, 2);
