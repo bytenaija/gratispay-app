@@ -20,4 +20,24 @@ export const checkIfPinSet = async (access_token) => {
     } catch (err) {
       return false
     }
+}
+
+export const addUsertoken = async (access_token, token) => {
+  const auth = `Bearer ${access_token}`
+  const url = `${authUrl}auth/token`
+  try {
+    const { data } = await axios.patch(url, {token}, {
+      headers: {
+        Authorization: auth,
+      },
+    })
+
+    if (data) {
+      console.log(data)
+
+    }
+    return data
+  } catch (err) {
+    console.log(error)
   }
+}

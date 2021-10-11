@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "150998704259",
+    "project_id": "gratispay-accounts",
+    "storage_bucket": "gratispay-accounts.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:150998704259:android:dbb95d8804f838bfb9fbb6",
+        "android_client_info": {
+          "package_name": "com.byteview.systems"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "150998704259-0rnktpplqq0dkk0a4aspa32b5k469umt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC09neJr-iXZBz8kUlgWgdL74zJ2OnuvLA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "150998704259-0rnktpplqq0dkk0a4aspa32b5k469umt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

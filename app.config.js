@@ -8,4 +8,7 @@ export default {
     walletsApiBaseUrl: process.env.WALLET_API_BASE_URL,
     accountsApiBaseUrl: process.env.ACCOUNT_API_BASE_URL
   },
+  android: {
+    package: "com.byteview.systems.gratispay"
+  }
 }
