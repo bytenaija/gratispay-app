@@ -1,27 +1,33 @@
 import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import { FontAwesome } from '@expo/vector-icons';
+import moment from 'moment'
 import numbro from "numbro"
 import  Constants  from 'expo-constants';
 
-import { STATUS } from '../constants/giveaway';
-import { borderColor } from 'styled-system';
+import { BENEFICIARIESGIVEAWAYSTATUS } from '../constants/giveaway';
 
-const GiveAwayWidget = ({ navigation, giveAway = [], handleClose, handleAccepting }) => {
-  const currentGiveAway = giveAway.slice(0, 2);
+
+const sortDate = (a, b) => {
+
+   return new Date(b.createdAt) > new Date(a.createdAt)
+}
+
+const BeneficiaryWidget = ({ navigation, giveAway = []}) => {
+  const currentGiveAway = giveAway.sort(sortDate).slice(0, 2);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerText}>
           <Text style={styles.mainText}>
-          Current Giveaway
+          Benefited From
           </Text>
           <View style={styles.notice}><Text style={styles.noticeText}>{currentGiveAway.length}</Text></View></View>
         <TouchableOpacity style={styles.button}><Text>See All</Text></TouchableOpacity>
 
       </View>
       <View style={styles.giveawayMainContainer}>
-        {giveAway.length > 0 && (<>{currentGiveAway.map(giveaway => <Giveaway giveaway={giveaway} key={giveaway._id} handleAccepting={handleAccepting} handleClose={handleClose}/>)}</>)}
+        {giveAway.length > 0 && (<>{currentGiveAway.map(giveaway => <Giveaway giveaway={giveaway} key={giveaway._id} />)}</>)}
          {giveAway.length <= 0 && (<Text>Your followers are still waiting for their baller</Text>)}
       </View>
     </View>
@@ -30,59 +36,52 @@ const GiveAwayWidget = ({ navigation, giveAway = [], handleClose, handleAcceptin
 
 
 
-const Giveaway = ({ giveaway, handleAccepting, handleClose }) => {
+const Giveaway = ({ giveaway }) => {
 
 
 const getCorrectButton = (status, id) => {
  switch (status) {
-    case STATUS.ACCEPTING:
-return <TouchableOpacity style={styles.redIcons} onPress={() => handleClose(id)}>
+    case BENEFICIARIESGIVEAWAYSTATUS.PENDING:
+return <Text style={styles.textPurple} >
 
-       <FontAwesome name="pause" color="#ff0000" />
-       </TouchableOpacity>
+       PENDING
+       </Text>
 
-    case STATUS.CLOSED:
-    case STATUS.CREATED:
+   case BENEFICIARIESGIVEAWAYSTATUS.PAID:
+     return <Text style={styles.textGreen} >
+
+       PAID
+       </Text>
+    case BENEFICIARIESGIVEAWAYSTATUS.ERROR:
     default:
-     return <TouchableOpacity style={styles.purpleIcons} onPress={() => handleAccepting(id)}>
+     return <Text style={styles.textRed} >
 
-       <FontAwesome name="play" color="#8576ed" />
-       </TouchableOpacity>
+       ERROR
+       </Text>
 
 
   }
 }
 
-  const getCorrectIcon = (status) => {
-  switch (status) {
-    case STATUS.ACCEPTING:
-      return <View style={{ ...styles.icon, borderColor: "#00ff00" }}>
 
-        <FontAwesome name="briefcase" color="#00ff00" size={20}/>
-      </View>
-    case STATUS.CLOSED:
-      return <View style={{ ...styles.icon, borderColor: "#ff0000" }}><FontAwesome name="power-off" color="#ff0000" size={20}/></View>
-    case STATUS.CREATED:
-    default:
-      return <View style={{ ...styles.icon, borderColor: "#8576ed" }}><FontAwesome name="refresh" color="#8576ed" size={20}/></View>
-  }
-}
   return (
     <View style={styles.individualContainer}>
       <View style={styles.detailsContainer}>
-
-
-        {getCorrectIcon(giveaway.status)}
-
       <View style={styles.details}>
-        <Text style={styles.codeText}>{giveaway.code}</Text>
+        <View >{ getCorrectButton(giveaway.status, giveaway._id)}</View>
         <Text>{giveaway.currency} {numbro(giveaway.amount).format({
                     thousandSeparated: true,
                     mantissa: 2,
                   })}</Text>
       </View>
       </View>
-      <View style={{alignItems: 'center', }}>{ getCorrectButton(giveaway.status, giveaway._id)}</View>
+      <View>
+        <Text>
+
+        {moment(giveaway.createdAt).fromNow()}
+        </Text>
+      </View>
+
     </View>
   )
 
@@ -147,24 +146,31 @@ const styles = StyleSheet.create({
     fontSize: 24
   },
   redIcons: {
-    width: 50,
-    height: 30,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: '#ff0000',
     justifyContent: 'center',
     alignItems: 'center'
   },
+  textRed: {
+    fontWeight: '900',
+    color: '#ff0000',
+  },
    purpleIcons: {
-    width: 50,
-    height: 30,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: '#8576ED',
+
+
     justifyContent: 'center',
     alignItems: 'center'
+  },
+textPurple: {
+    fontWeight: '900',
+     color: '#8576ED',
+  },
+  greenIcons: {
+
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  textGreen: {
+    fontWeight: '900',
+    color: '#00FF00',
   },
   detailsContainer: {
       flexDirection: 'row',
@@ -182,4 +188,4 @@ const styles = StyleSheet.create({
   }
 
 })
-export default GiveAwayWidget
+export default BeneficiaryWidget

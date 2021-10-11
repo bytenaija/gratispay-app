@@ -34,7 +34,6 @@ const PinPage = ({ navigation, authApiBaseUrl }) => {
             },
           }
         )
-        console.log(result.data)
         setPin("")
 
         navigation.navigate("Dashboard")

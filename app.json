@@ -5,14 +5,16 @@
         "backgroundColor": "#FFFFFF",
         "foregroundImage": "./assets/adaptive-icon.png"
       },
-      "googleServicesFile": "./google-services-gratis-android.json"
+      "googleServicesFile": "./google-services-gratis-android.json",
+      "package": "com.byteview.systems.gratispay"
     },
     "assetBundlePatterns": ["**/*"],
     "icon": "./assets/icon.png",
     "ios": {
+      "bundleIdentifier": "com.byteview.systems.gratispay",
       "supportsTablet": true
     },
-    "name": "gratispay-app",
+    "name": "GratisPay",
     "orientation": "portrait",
     "slug": "gratispay-app",
     "splash": {

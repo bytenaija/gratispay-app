@@ -10,5 +10,8 @@ export default {
   },
   android: {
     package: "com.byteview.systems.gratispay"
+  },
+   ios: {
+    bundleIdentifier: "com.byteview.systems.gratispay",
   }
 }

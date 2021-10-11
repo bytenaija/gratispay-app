@@ -8,8 +8,8 @@ import Constants from "expo-constants"
 
 
 const walletUrl = Constants.manifest.extra.walletsApiBaseUrl
-export const getUserWallets = async (userCred, setWallet) => {
-    const auth = `Bearer ${userCred.access_token}`
+export const getUserWallets = async (access_token, setWallet) => {
+    const auth = `Bearer ${access_token}`
     const url = `${walletUrl}wallets`
     try {
       const { data } = await axios.get(url, {
@@ -23,10 +23,10 @@ export const getUserWallets = async (userCred, setWallet) => {
         await saveItemInStorage("wallets", data)
       }
     } catch (err) {
+      console.log(err)
       if (err.response.status === 401) {
         await deleteItemFromStorage("wallet")
         await deleteItemFromStorage("user")
-        setStoredCredentials(null)
       } else {
         const storedWallet = await getItemFromStorage("wallet")
         setWallet(storedWallet)

@@ -29,7 +29,7 @@ const CreateGiveawayScreen = ({ navigation }) => {
       currency: 'NGN',
       numberOfBeneficiaries
     }
-    await createGiveaway(user.access_token, giveawayData, setGiveaway)
+    await createGiveaway(user?.access_token, giveawayData, setGiveaway)
     navigation.navigate("HomeScreen")
   }
   return(

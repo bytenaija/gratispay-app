@@ -12,28 +12,37 @@ import WalletDisplay from "../components/WalletDisplay"
 import ActionsButton from "../components/ActionsButton"
 import { getUserWallets } from "../functions/wallets"
 import GiveAwayWidget from "../components/GiveawayWidget"
-import { getUserGiveAway, setAccepting,setClosed } from "../functions/giveaway"
+import { getUserGiveAway, setAccepting,setClosed, getGiveawayBenefitedFrom } from "../functions/giveaway"
 import { GiveawayContext } from "../store/giveaway"
+import BeneficiaryWidget from "../components/BeneficiaryWidget"
+import { BenefitContext } from "../store/benefit"
 
 const Dashboard = ({ navigation }) => {
   const { wallet, setWallet } = useContext(WalletContext)
   const { giveaways, setGiveaway } = useContext(GiveawayContext)
+  const { giveawayEntered, setGiveAwayEntered } = useContext(BenefitContext)
   const { user } = useContext(UserContext)
 
   useEffect(() => {
-    if (!wallet && user) {
-      getUserWallets(user.access_token, setWallet)
+
+    const getData = async () => {
+      await Promise.all([
+        getUserWallets(user?.access_token, setWallet),
+        getUserGiveAway(user?.access_token, setGiveaway),
+        getGiveawayBenefitedFrom(user?.access_token, setGiveAwayEntered)
+      ])
     }
 
-    getUserGiveAway(user.access_token, setGiveaway)
-  }, [user, wallet])
+    getData()
+
+  }, [user])
 
   const handleAccepting = async (id) => {
-    setAccepting(user.access_token, id, setGiveaway)
+    setAccepting(user?.access_token, id, setGiveaway)
   }
 
    const handleClose = async (id) => {
-    setClosed(user.access_token, id, setGiveaway)
+    setClosed(user?.access_token, id, setGiveaway)
   }
   return (
     <MainLayout navigation={navigation}>
@@ -56,9 +65,11 @@ const Dashboard = ({ navigation }) => {
         <View >
           <ActionsButton navigation={navigation}/>
         </View>
-
-          <View >
+          <View>
           <GiveAwayWidget navigation={navigation} giveAway={giveaways} handleAccepting={handleAccepting} handleClose={handleClose}/>
+        </View>
+        <View>
+          <BeneficiaryWidget giveAway={ giveawayEntered}/>
         </View>
       </ScrollView>
     </MainLayout>

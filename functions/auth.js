@@ -32,10 +32,6 @@ export const addUsertoken = async (access_token, token) => {
       },
     })
 
-    if (data) {
-      console.log(data)
-
-    }
     return data
   } catch (err) {
     console.log(error)

@@ -23,7 +23,6 @@ const PinPage = ({ navigation, authApiBaseUrl }) => {
             },
           }
         )
-        console.log(result.data)
         setPin("")
         setConfirmPin("")
         setStage("default")

@@ -15,6 +15,8 @@ import {
 import { getUserWallets } from "./functions/wallets"
 import { checkIfPinSet,addUsertoken } from "./functions/auth"
 import GiveawayContextProvider from "./store/giveaway"
+import BenefitContextProvider from "./store/benefit";
+import NotificationContextProvider from "./store/notifications";
 
 
 Notifications.setNotificationHandler({
@@ -26,7 +28,8 @@ Notifications.setNotificationHandler({
 });
 export default function App() {
   const [notification, setNotification] = useState(false);
-  const [expoPushToken, setExpoPushToken] = useState(false);
+  const [, setExpoPushToken] = useState(false);
+  const [giveawayEntered, setGiveAwayEntered] = useState([])
   const notificationListener = useRef();
   const responseListener = useRef();
   const [appIsReady, setAppIsReady] = useState(false)
@@ -35,20 +38,18 @@ export default function App() {
   const [giveaways, setGiveaway] = useState([])
   const checkIsUserExists = async () => {
     const userCred = await getItemFromStorage("user")
-    console.log(userCred)
     const pinSet = await getItemFromStorage("pinSet")
     if (userCred) {
       userCred.pinSet = pinSet
       if (!pinSet) {
         const userPinSet = await checkIfPinSet(userCred.access_token)
         await saveItemInStorage("pinSet", userPinSet)
-        console.log(userPinSet, "pinset")
         userCred.pinSet = userPinSet
       }
     }
     setStoredCredentials(userCred)
     if (userCred) {
-      await getUserWallets(userCred, setWallet)
+      await getUserWallets(userCred.access_token, setWallet)
     }
   }
 
@@ -57,7 +58,6 @@ export default function App() {
       const userCred = await getItemFromStorage("user")
       if (userCred) {
         const result = await addUsertoken(userCred.access_token, token)
-        console.log("UserToken Set", result)
       }
       setExpoPushToken(token)
     });
@@ -69,7 +69,7 @@ export default function App() {
 
     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response);
+      console.log(response, "haba");
     });
 
     return () => {
@@ -103,7 +103,6 @@ export default function App() {
       return;
     }
     token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log(token);
 
   } else {
     alert('Must use physical device for Push Notifications');
@@ -127,7 +126,11 @@ export default function App() {
     >
       <WalletContextProvider setWallet={setWallet} wallet={wallet}>
         <GiveawayContextProvider setGiveaway={setGiveaway} giveaways={giveaways}>
-        <RootStack />
+          <BenefitContextProvider setGiveAwayEntered={setGiveAwayEntered} giveawayEntered={giveawayEntered}>
+            <NotificationContextProvider notifications={notification} setNotifications={setNotification} >
+              <RootStack />
+            </NotificationContextProvider>
+          </BenefitContextProvider>
         </GiveawayContextProvider>
       </WalletContextProvider>
     </UserContextProvider>

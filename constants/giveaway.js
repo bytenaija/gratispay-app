@@ -1,5 +1,12 @@
 export const STATUS = {
-	CREATED: "0",
-	ACCEPTING: "1",
-	CLOSED: "2",
+	CREATED: 0,
+	ACCEPTING: 1,
+	CLOSED: 2,
+}
+
+export const BENEFICIARIESGIVEAWAYSTATUS ={
+  PENDING: 0,
+  PAID: 1,
+  ERROR: 2,
+  CANCELLED: 3,
 }

@@ -4,7 +4,6 @@ import axios from "axios"
 
 const accountUrl = Constants.manifest.extra.accountsApiBaseUrl
 
-console.log(accountUrl, "dhdhdhd")
 
 export const getUserGiveAway = async (access_token, setGiveaway) => {
     const auth = `Bearer ${access_token}`
@@ -15,7 +14,6 @@ export const getUserGiveAway = async (access_token, setGiveaway) => {
           Authorization: auth,
         },
       })
-      console.log("dta", data)
       setGiveaway(data || [])
     } catch (err) {
       console.log((err))
@@ -69,7 +67,7 @@ const auth = `Bearer ${access_token}`
   }
 }
 
-export const enterGiveAway = async (access_token, giveawayData, setGiveaway) => {
+export const enterGiveAway = async (access_token, giveawayData, setGiveawayEntered) => {
 const auth = `Bearer ${access_token}`
   const url = `${accountUrl}giveaway/enter`
   try {
@@ -78,8 +76,25 @@ const auth = `Bearer ${access_token}`
         Authorization: auth,
       },
     })
-console.log(data, "enter")
+    await getGiveawayBenefitedFrom(access_token, setGiveawayEntered)
   } catch (err) {
     console.log(err.response.message)
+  }
+}
+
+
+export const getGiveawayBenefitedFrom = async (access_token, setGiveawayEntered) => {
+  const auth = `Bearer ${access_token}`
+  const url = `${accountUrl}giveaway/benefits`
+  try {
+    const { data } =await axios.get(url,  {
+      headers: {
+        Authorization: auth,
+      },
+    })
+    setGiveawayEntered(data)
+  } catch (err) {
+    console.log(err.response.message)
+    setGiveawayEntered([])
   }
 }

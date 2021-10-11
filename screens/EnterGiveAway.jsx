@@ -4,13 +4,14 @@ import MainLayout from "../layouts/main-layout"
 const ScreenHeight = Dimensions.get("window").height;
 import {  Ionicons } from "@expo/vector-icons"
 import { createGiveaway, enterGiveAway } from '../functions/giveaway';
-import { GiveawayContext } from "../store/giveaway"
+
 import { UserContext } from "../store/user"
+import { BenefitContext } from "../store/benefit"
 
 
 
 const EnterGiveAwayScreen = ({ navigation }) => {
-    const {  setGiveaway } = useContext(GiveawayContext)
+      const {  setGiveAwayEntered } = useContext(BenefitContext)
   const { user } = useContext(UserContext)
    const [giveawayCode, setGiveAwayCode] = useState('')
   const enterGiveAwayCode = (code) => {
@@ -23,7 +24,7 @@ const EnterGiveAwayScreen = ({ navigation }) => {
       code: giveawayCode,
       amount: 5000
     }
-    await enterGiveAway(user.access_token, giveawayData, setGiveaway)
+    await enterGiveAway(user?.access_token, giveawayData, setGiveAwayEntered)
     navigation.navigate("HomeScreen")
   }
 
